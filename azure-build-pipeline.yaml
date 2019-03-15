@@ -9,10 +9,11 @@ trigger:
 
 variables:
   imageName: 'azuredevops-terraform-agent'
+  terraformVersion: 0.11.13
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
 steps:
-- bash: docker build -f $(system.defaultWorkingDirectory)/Dockerfile -t $(registryName)/$(imageName):$(build.buildId) -t $(registryName)/$(imageName):latest $(system.defaultWorkingDirectory)
+- bash: docker build -f $(system.defaultWorkingDirectory)/Dockerfile -t $(registryName)/$(imageName):$(terraformVersion) -t $(registryName)/$(imageName):latest --build-arg TERRAFORM_VERSION=$(terraformVersion) $(system.defaultWorkingDirectory)
   displayName: 'docker build'
 
 - bash: docker login -u $(registryLogin) -p $(registryPassword)
@@ -20,7 +21,7 @@ steps:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 
 - bash: |
-    docker push $(registryName)/$(imageName):$(build.buildId)
+    docker push $(registryName)/$(imageName):$(terraformVersion)
     docker push $(registryName)/$(imageName):latest
   displayName: 'docker push'
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
