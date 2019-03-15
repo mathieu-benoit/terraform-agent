@@ -5,7 +5,7 @@ trigger:
   batch: true
 
 variables:
-  imageName: '$(projectName)'
+  imageName: 'azuredevops-terraform-agent'
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
 steps:
