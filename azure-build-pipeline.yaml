@@ -3,6 +3,9 @@ pool:
 
 trigger:
   batch: true
+  branches:
+    include:
+    - *
 
 variables:
   imageName: 'azuredevops-terraform-agent'
