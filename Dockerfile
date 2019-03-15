@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ENV TERRAFORM_VERSION 0.11.13
+ARG TERRAFORM_VERSION=0.11.13
 
 RUN apt-get update \
  && apt-get install -y wget unzip \
