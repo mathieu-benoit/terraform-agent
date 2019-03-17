@@ -13,16 +13,16 @@ trigger:
     - example/
 
 variables:
+  location: eastus
   # define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
 
 steps:
-- script: |
-    az login --service-principal -u $(clientId) -p $(clientSecret) --tenant $(tenantId)
+- script: az login --service-principal -u $(clientId) -p $(clientSecret) --tenant $(tenantId)
   displayName: 'az login'
 - script: |
     cd $(system.defaultWorkingDirectory)/example
     terraform init
-    terraform apply -auto-approve -var resource_group_name=$(resourceGroupName)
+    terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
   displayName: 'Terraform init and apply'
   env:
       ARM_TENANT_ID: $(tenantId)
