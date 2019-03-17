@@ -1,0 +1,31 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+container: mabenoit/azuredevops-terraform-agent:latest
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - refs/heads/*
+  paths:
+    include:
+    - example/
+
+variables:
+  # define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
+
+steps:
+- script: |
+    az login --service-principal -u $(clientId) -p $(clientSecret) --tenant $(tenantId)
+  displayName: 'az login'
+- script: |
+    cd $(system.defaultWorkingDirectory)/example
+    terraform init
+    terraform apply -auto-approve -var resource_group_name=$(resourceGroupName)
+  displayName: 'Terraform init and apply'
+  env:
+      ARM_TENANT_ID: $(tenantId)
+      ARM_SUBSCRIPTION_ID: $(subscriptionId)
+      ARM_CLIENT_ID: $(clientId)
+      ARM_CLIENT_SECRET: $(clientSecret)
