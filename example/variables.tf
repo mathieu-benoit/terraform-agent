@@ -4,5 +4,4 @@ variable "resource_group_name" {
 
 variable "location" {
   description = "Location of the resource group"
-  default = "eastus"
 }
