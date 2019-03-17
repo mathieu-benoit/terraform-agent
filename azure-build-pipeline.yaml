@@ -4,8 +4,6 @@ pool:
 trigger:
   batch: true
   branches:
-    include:
-    - refs/heads/*
     exclude:
     - example/
     - README.md
