@@ -17,8 +17,6 @@ variables:
   # define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
 
 steps:
-- script: az login --service-principal -u $(clientId) -p $(clientSecret) --tenant $(tenantId)
-  displayName: 'az login'
 - script: |
     cd $(system.defaultWorkingDirectory)/example
     terraform init
