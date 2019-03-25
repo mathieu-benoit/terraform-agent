@@ -18,6 +18,7 @@ variables:
 
 steps:
 - script: |
+    terraform --version
     cd $(system.defaultWorkingDirectory)/example
     terraform init
     terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
