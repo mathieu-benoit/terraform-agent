@@ -7,7 +7,7 @@ trigger:
   batch: true
   branches:
     include:
-    - refs/heads/*
+    - master
   paths:
     include:
     - example/
