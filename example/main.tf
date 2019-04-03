@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "~>1.23"
+  version = "~>1.24"
 }
 resource "azurerm_resource_group" "rg" {
   name     = "${var.resource_group_name}"
