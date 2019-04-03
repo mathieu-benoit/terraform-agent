@@ -10,6 +10,14 @@ trigger:
     exclude:
     - example/
     - README.md
+pr:
+  branches:
+    include:
+    - refs/heads/*
+  paths:
+    exclude:
+    - example/
+    - README.md
 
 variables:
   imageName: 'azuredevops-terraform-agent'
