@@ -20,7 +20,7 @@ pr:
     - README.md
 
 variables:
-  imageName: 'azuredevops-terraform-agent'
+  imageName: 'terraform-agent'
   terraformVersion: 0.11.13
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
