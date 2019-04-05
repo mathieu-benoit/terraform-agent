@@ -1,7 +1,7 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-container: mabenoit/azuredevops-terraform-agent:latest
+container: mabenoit/terraform-agent:latest
 
 trigger:
   batch: true
