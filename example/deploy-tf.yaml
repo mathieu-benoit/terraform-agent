@@ -22,7 +22,7 @@ steps:
     terraform --version
     cd $(system.defaultWorkingDirectory)/example
     terraform init
-    terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location) -var tenantId=$(tenantId)
+    terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location) -var tenant_id=$(tenantId)
   displayName: 'Terraform init and apply'
   env:
       ARM_TENANT_ID: $(tenantId)
