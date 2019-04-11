@@ -47,7 +47,7 @@ resource "azurerm_key_vault" "keyvault" {
   name                = "test-key-vault-${count.index}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   location            = "${azurerm_resource_group.rg.location}"
-  tenant_id           = "${local.tenantId}"
+  tenant_id           = "${var.tenant_id}"
   sku {
     name = "standard"
   }
@@ -57,7 +57,7 @@ resource "azurerm_key_vault_access_policy" "policy" {
   count               = "${local.numberOfServicePrincipals}"
   object_id           = "${azuread_service_principal.service_principal.*.id[count.index]}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
-  tenant_id           = "${local.tenantId}"
+  tenant_id           = "${var.tenant_id}"
   vault_name          = "${azurerm_key_vault.keyvault.*.name[count.index]}"
 
   key_permissions = [
