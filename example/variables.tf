@@ -6,6 +6,6 @@ variable "location" {
   description = "Location of the resource group"
 }
 
-variable "tenantId" {
+variable "tenant_id" {
   description = "Tenant Id"
 }
