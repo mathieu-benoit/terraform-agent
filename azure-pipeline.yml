@@ -48,7 +48,7 @@ stages:
   jobs:
   - job: Release
     displayName: deploy for testing
-    container: $(registryName)/$(imageName):$(terraformVersion)
+    container: mabenoit/terraform-agent:latest
     pool:
       vmImage: $(vmImage)
       steps:
@@ -58,6 +58,7 @@ stages:
           terraform init
           terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
         displayName: 'Terraform init and apply'
+        condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
         env:
             ARM_TENANT_ID: $(tenantId)
             ARM_SUBSCRIPTION_ID: $(subscriptionId)
