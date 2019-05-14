@@ -17,10 +17,12 @@ pr:
     - README.md
 
 variables:
+  vmImage: 'ubuntu-16.04'
   imageName: 'terraform-agent'
   terraformVersion: 0.11.13
-  vmImage: 'ubuntu-16.04'
-  # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
+  # for build, define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
+  location: eastus
+  # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
 
 stages:
 - stage: Build
@@ -41,3 +43,23 @@ stages:
         docker push $(registryName)/$(imageName):latest
       displayName: 'docker push'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+- stage: Release
+  displayName: Release stage
+  jobs:
+  - job: Release
+    displayName: deploy for testing
+    container: $(registryName)/$(imageName):$(terraformVersion)
+    pool:
+      vmImage: $(vmImage)
+      steps:
+      - script: |
+          terraform --version
+          cd $(system.defaultWorkingDirectory)/example
+          terraform init
+          terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
+        displayName: 'Terraform init and apply'
+        env:
+            ARM_TENANT_ID: $(tenantId)
+            ARM_SUBSCRIPTION_ID: $(subscriptionId)
+            ARM_CLIENT_ID: $(clientId)
+            ARM_CLIENT_SECRET: $(clientSecret)
