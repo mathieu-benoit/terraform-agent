@@ -18,9 +18,6 @@ pr:
 
 variables:
   vmImage: 'ubuntu-16.04'
-  imageName: 'terraform-agent'
-  terraformVersion: 0.11.13
-  # for build, define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
   location: eastus
   # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
 
@@ -29,6 +26,10 @@ stages:
   displayName: Build stage
   jobs:
   - job: Build
+    variables:
+      imageName: 'terraform-agent'
+      terraformVersion: 0.11.13
+      # define 3 more variables: registryName, registryLogin and registryPassword in the pipeline definition UI
     displayName: terraform docker image build
     pool:
       vmImage: $(vmImage)
@@ -47,6 +48,9 @@ stages:
   displayName: Release stage
   jobs:
   - job: Release
+    variables:
+      location: eastus
+      # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
     displayName: deploy for testing
     container: mabenoit/terraform-agent:latest
     pool:
