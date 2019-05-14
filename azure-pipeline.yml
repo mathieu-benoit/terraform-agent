@@ -5,7 +5,6 @@ trigger:
     - master
   paths:
     exclude:
-    - example/
     - README.md
 pr:
   branches:
@@ -13,7 +12,6 @@ pr:
     - refs/heads/*
   paths:
     exclude:
-    - example/
     - README.md
 
 variables:
@@ -55,16 +53,16 @@ stages:
     container: mabenoit/terraform-agent:latest
     pool:
       vmImage: $(vmImage)
-      steps:
-      - script: |
-          terraform --version
-          cd $(system.defaultWorkingDirectory)/example
-          terraform init
-          terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
-        displayName: 'Terraform init and apply'
-        condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-        env:
-            ARM_TENANT_ID: $(tenantId)
-            ARM_SUBSCRIPTION_ID: $(subscriptionId)
-            ARM_CLIENT_ID: $(clientId)
-            ARM_CLIENT_SECRET: $(clientSecret)
+    steps:
+    - script: |
+        terraform --version
+        cd $(system.defaultWorkingDirectory)/example
+        terraform init
+        terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
+      displayName: 'Terraform init and apply'
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+      env:
+          ARM_TENANT_ID: $(tenantId)
+          ARM_SUBSCRIPTION_ID: $(subscriptionId)
+          ARM_CLIENT_ID: $(clientId)
+          ARM_CLIENT_SECRET: $(clientSecret)
