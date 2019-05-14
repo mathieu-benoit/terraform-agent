@@ -19,7 +19,7 @@ pr:
 variables:
   imageName: 'terraform-agent'
   terraformVersion: 0.11.13
-  vmImage: 'Ubuntu 16.04'
+  vmImage: ubuntu-16.04
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
 stages:
@@ -27,7 +27,7 @@ stages:
   displayName: Build stage
   jobs:
   - job: Build
-    displayName: kubernetes build
+    displayName: terraform docker image build
     pool:
       name: $(vmImage)
     steps:
