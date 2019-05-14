@@ -19,7 +19,7 @@ pr:
 variables:
   imageName: 'terraform-agent'
   terraformVersion: 0.11.13
-  vmImage: ubuntu-16.04
+  vmImage: 'ubuntu-latest'
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
 stages:
