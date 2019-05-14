@@ -19,7 +19,7 @@ pr:
 variables:
   imageName: 'terraform-agent'
   terraformVersion: 0.11.13
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-16.04'
   # define 3 more variables: registryName, registryLogin and registryPassword in the build pipeline in UI
 
 stages:
@@ -29,7 +29,7 @@ stages:
   - job: Build
     displayName: terraform docker image build
     pool:
-      name: $(vmImage)
+      vmImage: $(vmImage)
     steps:
     - bash: docker build -f $(system.defaultWorkingDirectory)/Dockerfile -t $(registryName)/$(imageName):$(terraformVersion) -t $(registryName)/$(imageName):latest --build-arg TERRAFORM_VERSION=$(terraformVersion) $(system.defaultWorkingDirectory)
       displayName: 'docker build'
