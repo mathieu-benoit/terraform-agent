@@ -26,7 +26,7 @@ stages:
   - job: Build
     variables:
       imageName: 'terraform-agent'
-      terraformVersion: 0.12.1
+      terraformVersion: 0.12.2
       # define 3 more variables: registryName, registryLogin and registryPassword in the pipeline definition UI
     displayName: terraform docker image build
     pool:
