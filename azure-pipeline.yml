@@ -42,10 +42,10 @@ stages:
         docker push $(registryName)/$(imageName):latest
       displayName: 'docker push'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-- stage: Release
-  displayName: Release stage
+- stage: Plan
+  displayName: Plan stage
   jobs:
-  - job: Release
+  - job: Plan
     variables:
       location: eastus
       # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
@@ -58,8 +58,32 @@ stages:
         terraform --version
         cd $(system.defaultWorkingDirectory)/example
         terraform init
+        terraform plan -var resource_group_name=$(resourceGroupName) -var location=$(location)
+      displayName: 'Terraform plan'
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+      env:
+          ARM_TENANT_ID: $(tenantId)
+          ARM_SUBSCRIPTION_ID: $(subscriptionId)
+          ARM_CLIENT_ID: $(clientId)
+          ARM_CLIENT_SECRET: $(clientSecret)
+- stage: Apply
+  displayName: Apply stage
+  jobs:
+  - job: Apply
+    variables:
+      location: eastus
+      # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
+    displayName: Apply
+    container: mabenoit/terraform-agent:latest
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - script: |
+        terraform --version
+        cd $(system.defaultWorkingDirectory)/example
+        terraform init
         terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
-      displayName: 'Terraform init and apply'
+      displayName: 'Terraform apply'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
       env:
           ARM_TENANT_ID: $(tenantId)
