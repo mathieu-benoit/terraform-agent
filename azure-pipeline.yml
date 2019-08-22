@@ -54,7 +54,7 @@ stages:
     - script: |
         terraform --version
         cd $(system.defaultWorkingDirectory)/example
-        terraform init
+        terraform init -backend=false
         terraform validate
       displayName: 'Terraform validate'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
