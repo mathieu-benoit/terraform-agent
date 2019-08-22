@@ -42,6 +42,22 @@ stages:
         docker push $(registryName)/$(imageName):latest
       displayName: 'docker push'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+- stage: Validate
+  displayName: Validate stage
+  jobs:
+  - job: Validate
+    displayName: Validate
+    container: mabenoit/terraform-agent:latest
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - script: |
+        terraform --version
+        cd $(system.defaultWorkingDirectory)/example
+        terraform init
+        terraform validate
+      displayName: 'Terraform validate'
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 - stage: Plan
   displayName: Plan stage
   jobs:
@@ -49,13 +65,12 @@ stages:
     variables:
       location: eastus
       # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
-    displayName: deploy for testing
+    displayName: Plan
     container: mabenoit/terraform-agent:latest
     pool:
       vmImage: $(vmImage)
     steps:
     - script: |
-        terraform --version
         cd $(system.defaultWorkingDirectory)/example
         terraform init
         terraform plan -var resource_group_name=$(resourceGroupName) -var location=$(location)
@@ -79,7 +94,6 @@ stages:
       vmImage: $(vmImage)
     steps:
     - script: |
-        terraform --version
         cd $(system.defaultWorkingDirectory)/example
         terraform init
         terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
