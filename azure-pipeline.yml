@@ -53,9 +53,9 @@ stages:
     steps:
     - script: |
         terraform --version
-        cd $(system.defaultWorkingDirectory)/example
         terraform init -backend=false
         terraform validate
+      workingDirectory: $(system.defaultWorkingDirectory)/example
       displayName: 'Terraform validate'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 - stage: Plan
@@ -71,9 +71,9 @@ stages:
       vmImage: $(vmImage)
     steps:
     - script: |
-        cd $(system.defaultWorkingDirectory)/example
         terraform init
         terraform plan -var resource_group_name=$(resourceGroupName) -var location=$(location)
+      workingDirectory: $(system.defaultWorkingDirectory)/example
       displayName: 'Terraform plan'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
       env:
@@ -94,9 +94,9 @@ stages:
       vmImage: $(vmImage)
     steps:
     - script: |
-        cd $(system.defaultWorkingDirectory)/example
         terraform init
         terraform apply -auto-approve -var resource_group_name=$(resourceGroupName) -var location=$(location)
+      workingDirectory: $(system.defaultWorkingDirectory)/example
       displayName: 'Terraform apply'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
       env:
