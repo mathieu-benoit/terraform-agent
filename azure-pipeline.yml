@@ -15,8 +15,9 @@ pr:
     - README.md
 
 variables:
-  vmImage: 'ubuntu-16.04'
+  vmImage: 'ubuntu-18.04'
   location: eastus
+  terraformVersion: 0.12.20
   # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the build pipeline in UI
 
 stages:
@@ -26,20 +27,18 @@ stages:
   - job: Build
     variables:
       imageName: 'terraform-agent'
-      terraformVersion: 0.12.7
       # define 3 more variables: registryName, registryLogin and registryPassword in the pipeline definition UI
     displayName: terraform docker image build
     pool:
       vmImage: $(vmImage)
     steps:
-    - bash: docker build -f $(system.defaultWorkingDirectory)/Dockerfile -t $(registryName)/$(imageName):$(terraformVersion) -t $(registryName)/$(imageName):latest --build-arg TERRAFORM_VERSION=$(terraformVersion) $(system.defaultWorkingDirectory)
+    - bash: docker build -f $(system.defaultWorkingDirectory)/Dockerfile -t $(registryName)/$(imageName):$(terraformVersion) --build-arg TERRAFORM_VERSION=$(terraformVersion) $(system.defaultWorkingDirectory)
       displayName: 'docker build'
     - bash: docker login -u $(registryLogin) -p $(registryPassword)
       displayName: 'docker login'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
     - bash: |
         docker push $(registryName)/$(imageName):$(terraformVersion)
-        docker push $(registryName)/$(imageName):latest
       displayName: 'docker push'
       condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 - stage: Validate
@@ -47,7 +46,7 @@ stages:
   jobs:
   - job: Validate
     displayName: Validate
-    container: mabenoit/terraform-agent:latest
+    container: mabenoit/terraform-agent:$(terraformVersion)
     pool:
       vmImage: $(vmImage)
     steps:
@@ -66,7 +65,7 @@ stages:
       location: eastus
       # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
     displayName: Plan
-    container: mabenoit/terraform-agent:latest
+    container: mabenoit/terraform-agent:$(terraformVersion)
     pool:
       vmImage: $(vmImage)
     steps:
@@ -89,7 +88,7 @@ stages:
       location: eastus
       # for release, define 5 more variables: resourceGroupName, clientId, clientSecret, subscriptionId and tenantId in the pipeline definition UI
     displayName: Apply
-    container: mabenoit/terraform-agent:latest
+    container: mabenoit/terraform-agent:$(terraformVersion)
     pool:
       vmImage: $(vmImage)
     steps:
